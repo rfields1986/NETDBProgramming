@@ -15,7 +15,7 @@ namespace SleepData
             string resp = Console.ReadLine();
 
             // specify path for data file
-            string file = "/users/jgrissom/downloads/data.txt";
+            string file = AppDomain.CurrentDomain.BaseDirectory + "data.txt";
 
             if (resp == "1")
             {
@@ -59,6 +59,63 @@ namespace SleepData
             else if (resp == "2")
             {
                 // TODO: parse data file
+                Console.Clear();
+
+                //make arrays of weekdays and dashes underneath.
+                string[] weekDay = new string[7] { "Su", "Mo", "Tu", "We", "Th" ,"Fr","Sa",};
+                string[] dashes = new string[7] { "--", "--", "--", "--", "--", "--", "--",};
+
+                //open up file for reading.
+                StreamReader reader1 = new StreamReader(file);
+
+                //start loop to read file line by line whilst spliting the line into two arrays based on dual delimiters ',' and '|'.
+                while (!reader1.EndOfStream)
+                {
+                    string line1 = reader1.ReadLine();
+                    string[] line1Array1 = line1.Split(',');
+                    string[] line1Array2 = line1Array1[1].Split('|');
+                    int[] hour = Array.ConvertAll(line1Array2, int.Parse);
+
+                    //Convert the date in the file to a datetime type.
+                    DateTime date = Convert.ToDateTime(line1Array1[0]);
+
+                    //print out date with correct formating with space to match powerpoint
+                    Console.WriteLine($"\nWeek of {date:MMM}, {date:dd}, {date:yyyy}");
+
+                    //print out headers for hours using foreach loops
+                    foreach (var item in weekDay)
+                    {
+                        Console.Write($"{item,3}");
+                    }
+                    Console.Write(" Tot Avg");
+                    Console.WriteLine();
+                    foreach (var item in dashes)
+                    {
+                        Console.Write($"{item,3}");
+                    }
+                    Console.Write(" --- ---");
+                    Console.WriteLine();
+
+                    //sum up the elements in the hour array
+                    int hoursum = 0;
+
+                    foreach (int item in hour)
+                    {
+                        hoursum += item;
+                    }
+
+                    //print out hours from file using a foreach loop
+                    foreach (var item in hour)
+                    {
+                        Console.Write($"{item,3}");
+                    }
+
+                    //print out tot and avg 
+                    Console.Write($" {hoursum}  {hoursum / 7.0:N1}\n\n");
+                    
+
+                }
+
 
             }
         }
