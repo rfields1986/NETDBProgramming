@@ -15,66 +15,74 @@ namespace Week3Assign
 
         static void Main(string[] args)
         {
+
             nlog.Info("Program started");
             string file = "movies.csv";
             int exit = 0, input;
+
             
             List<int> movieID = new List<int>();
             List<string> movieTitle = new List<string>();
             List<string> movieGenre = new List<string>();
-            try
-            {
-                StreamReader fileReader = new StreamReader(file);
-                nlog.Info("Opened Streamreader");
-                string line0 = fileReader.ReadLine();
-                string[] header = line0.Split(',');
+            
 
-                while (!fileReader.EndOfStream)
-                {
-
-                    string lines = fileReader.ReadLine();
-                    int quoteMark = lines.IndexOf('"');
-
-                    // if there is not quote in the line then the details have no comma and the index is returned as -1
-                    if (quoteMark == -1)
-                    {
-                        //fill the lists from the array 
-                        string[] movieInfo = lines.Split(',');
-                        movieID.Add(Int32.Parse(movieInfo[0]));
-                        movieTitle.Add(movieInfo[1]);
-                        //using replace method to get rid of the pipe keys
-                        movieGenre.Add(movieInfo[2].Replace('|', ','));
-
-                    }
-                    else
-                    {
-                        //if the index is anything other than -1 then there is a quote in the info
-                        //use substring to extract the info into peices without quotation marks and fill into lists.
-                        movieID.Add(Int32.Parse(lines.Substring(0, quoteMark - 1)));
-                        lines = lines.Substring(quoteMark + 1);
-                        quoteMark = lines.IndexOf('"');
-                        movieTitle.Add(lines.Substring(0, quoteMark));
-                        lines = lines.Substring(quoteMark + 2);
-                        movieGenre.Add(lines.Replace('|', ','));
-
-                    }
-
-                }
-                fileReader.Close();
-                nlog.Info("Closed Streamreader");
-            }
-            catch (Exception execpt)
-            {
-                nlog.Error(execpt.Message);
-            }
-
-
-
+            //program loop begins
             do
             {
+                
+                try
+                {  
+
+
+                    //Read file and fill lists
+                    
+                    StreamReader fileReader = new StreamReader(file);
+                    nlog.Info("Opened Streamreader");
+                    string line0 = fileReader.ReadLine();
+                    string[] header = line0.Split(',');
+
+                    while (!fileReader.EndOfStream)
+                    {
+
+                        string lines = fileReader.ReadLine();
+                        int quoteMark = lines.IndexOf('"');
+
+                        // if there is not quote in the line then the details have no comma and the index is returned as -1
+                        if (quoteMark == -1)
+                        {
+                            //fill the lists from the array 
+                            string[] movieInfo = lines.Split(',');
+                            movieID.Add(Int32.Parse(movieInfo[0]));
+                            movieTitle.Add(movieInfo[1]);
+                            //using replace method to get rid of the pipe keys
+                            movieGenre.Add(movieInfo[2].Replace('|', ','));
+
+                        }
+                        else
+                        {
+                            //if the index is anything other than -1 then there is a quote in the info
+                            //use substring to extract the info into peices without quotation marks and fill into lists.
+                            movieID.Add(Int32.Parse(lines.Substring(0, quoteMark - 1)));
+                            lines = lines.Substring(quoteMark + 1);
+                            quoteMark = lines.IndexOf('"');
+                            movieTitle.Add(lines.Substring(0, quoteMark));
+                            lines = lines.Substring(quoteMark + 2);
+                            movieGenre.Add(lines.Replace('|', ','));
+
+                        }
+
+                    }
+                    fileReader.Close();
+                    nlog.Info("Closed Streamreader");
+                }
+                catch (Exception execpt)
+                {
+                    nlog.Error(execpt.Message);
+                }
 
                 //menu
-                Console.WriteLine("1. Read The Movie List.\n2. Add A Movie To List\n3. Exit Program");
+                Console.Clear(); 
+                Console.WriteLine("1. Read The Movie List.\n2. Add A Movie To List\n3. Exit Program\n(If A Movie Was Added To The List, Restart Program Before Reading List)");
                 Int32.TryParse(Console.ReadLine(), out input);
 
                 switch (input)
@@ -85,9 +93,12 @@ namespace Week3Assign
 
                         for (int i = 0; i < movieID.Count; i++)
                         { 
-                            Console.WriteLine(movieID[i]+" "+movieTitle[i]+" "+movieGenre[i]);   
+                            Console.WriteLine(movieID[i]+" "+movieTitle[i]+" "+movieGenre[i]);
+                            
                         }
-                          break;
+                        Console.ReadKey();
+                        break;
+                        
 
                     case 2:
                         //make the movie id and push it into a variable
@@ -112,7 +123,7 @@ namespace Week3Assign
 
                         //take in as many genres as the user wants to enter and store in a list with pipe key between all genres.
                         Console.Clear();
-                        Console.WriteLine("How many genres will be entered?");
+                        Console.Write("Please Enter The Number Of Genres(Enter 0 For No Genre): ");
                         int genreCount = 0;
                         Int32.TryParse(Console.ReadLine(), out genreCount);
                         if (genreCount == 0)
@@ -127,27 +138,29 @@ namespace Week3Assign
                             List<string> movieGenreInputList = new List<string>();
                             for (int i0 = 0; i0 < genreCount; i0++)
                             {
-                                Console.WriteLine($"Please Genre #{i0+1}");
+                                Console.Write($"\nPlease Enter Genre #{i0+1}:  ");
                                 string movieGenreInput = Console.ReadLine();
-                                if (i0 == genreCount)
+                                
+                                if (i0 + 1 == genreCount)
                                 {
                                     movieGenreInputList.Add(movieGenreInput);
                                 }
                                 else
                                 
-                                    movieGenreInputList.Add(movieGenreInput+"|");
+                                    movieGenreInputList.Add(movieGenreInput+" |");
+                                 
 
 
-                                //check for commas in movie title so the file format stays the same for any inputed infromation
-                                //int commaIndex = movieTitleInput.IndexOf(',');
-                                //if (commaIndex != -1)
-                                //{
-                                    //movieTitleInput = $"\" {movieTitleInput} \"";
-                                //}
-                                //else
-                                    //break;
-                                    //I cannot figure out why this does not put the quotations in the right place.
                             }
+
+                            //check for commas in movie title so the file format stays the same for any inputed infromation
+                            int commaIndex = movieTitleInput.IndexOf(',');
+                            if (commaIndex != -1)
+                            {
+                            movieTitleInput = $"\" {movieTitleInput} \"";
+                            }
+                            else
+                            break;
 
                             //open Streamwriter and write to file in correct order
                             StreamWriter inputToFile = new StreamWriter(file, append: true);
