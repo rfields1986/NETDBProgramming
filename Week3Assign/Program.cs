@@ -82,7 +82,7 @@ namespace Week3Assign
 
                 //menu
                 Console.Clear(); 
-                Console.WriteLine("1. Read The Movie List.\n2. Add A Movie To List\n3. Exit Program\n(If A Movie Was Added To The List, Restart Program Before Reading List)");
+                Console.WriteLine("1. Read The Movie List.\n2. Add A Movie To List\n3. Exit Program");
                 Int32.TryParse(Console.ReadLine(), out input);
 
                 switch (input)
@@ -102,7 +102,7 @@ namespace Week3Assign
 
                     case 2:
                         //make the movie id and push it into a variable
-                        int movieIDinput = movieID.Count()+1;
+                        int movieIDinput = movieID.Max()+1;
 
                         //Enter all info, push into user input into file
                         exit = 1;
@@ -157,10 +157,11 @@ namespace Week3Assign
                             int commaIndex = movieTitleInput.IndexOf(',');
                             if (commaIndex != -1)
                             {
-                            movieTitleInput = $"\" {movieTitleInput} \"";
+                                movieTitleInput = $"\" {movieTitleInput} \"";
                             }
-                            else
-                            break;
+                            else;
+                               
+                            
 
                             //open Streamwriter and write to file in correct order
                             StreamWriter inputToFile = new StreamWriter(file, append: true);
